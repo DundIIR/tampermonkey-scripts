@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitLab MR Files Copier
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.2
 // @description  Копирует список изменённых файлов bpm-ui из GitLab MR
 // @author       You
 // @match        https://gitlab.silaunion.ru/*
@@ -76,10 +76,12 @@
             if (!href) return;
             const btn = document.createElement('button');
             btn.className = 'btn btn-default btn-sm gl-button btn-default-tertiary btn-icon copy-file-link-btn';
-            btn.innerHTML = `<svg class="gl-button-icon gl-icon s16"><use href="#copy-to-clipboard"></use></svg><title>Copy file link</title>`;
+            btn.title = 'Copy file link';
+            btn.innerHTML = `<svg class="gl-button-icon gl-icon s16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="currentColor" d="M10 0H2a2 2 0 0 0-2 2v10h2V2h8V0Zm3 4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 10H6V6h7v8Z"/></svg>`;
             btn.onclick = async (e) => {
                 e.stopPropagation();
-                const url = href.startsWith('http') ? href : `${location.origin}${href}`;
+                const cleanHref = href.split('#')[0];
+                const url = cleanHref.startsWith('http') ? cleanHref : `${location.origin}${cleanHref}`;
                 await navigator.clipboard.writeText(`[${fileName}](${url})`);
             };
             copyBtn.insertAdjacentElement('afterend', btn);
