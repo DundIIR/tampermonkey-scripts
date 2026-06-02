@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Message Hider (Claude + ChatGPT)
 // @namespace    http://tampermonkey.net/
-// @version      1.0.3
+// @version      1.0.2
 // @description  Скрывает сообщения ассистента через blur на Claude и ChatGPT
 // @author       DundIIR
 // @match        https://claude.ai/*
@@ -31,42 +31,6 @@
   const isClaude = location.hostname === 'claude.ai';
   const isGPT = location.hostname === 'chatgpt.com';
 
-  let overlayCounter = 0;
-
-  function createNoiseOverlay() {
-    const id = 'spoiler-overlay-' + (++overlayCounter);
-    const size = 200;
-    const canvas = document.createElement('canvas');
-    canvas.width = size;
-    canvas.height = size;
-    const ctx = canvas.getContext('2d');
-    const imageData = ctx.createImageData(size, size);
-    for (let i = 0; i < imageData.data.length; i += 4) {
-      const v = Math.random() * 255 | 0;
-      imageData.data[i] = v;
-      imageData.data[i + 1] = v;
-      imageData.data[i + 2] = v;
-      imageData.data[i + 3] = (0.3 + Math.random() * 0.4) * 255 | 0;
-    }
-    ctx.putImageData(imageData, 0, 0);
-
-    const overlay = document.createElement('div');
-    overlay.id = id;
-    overlay.style.cssText = [
-      'position:absolute',
-      'inset:0',
-      'background-image:url(' + canvas.toDataURL() + ')',
-      'background-repeat:repeat',
-      'background-size:200px 200px',
-      'pointer-events:none',
-      'border-radius:inherit',
-      'z-index:10',
-      'opacity:0',
-      'transition:opacity 0.3s ease',
-    ].join(';');
-    return overlay;
-  }
-
   function addButton(actionBar, content, btnClass) {
     if (actionBar.querySelector('.hide-msg-btn') ||
         actionBar.closest('[data-test-render-count]')?.querySelector('.hide-msg-btn')) return;
@@ -78,37 +42,18 @@
     btn.setAttribute('aria-label', 'Hide message');
     btn.innerHTML = EYE_OPEN;
 
-    const overlay = createNoiseOverlay();
-    content.style.position = 'relative';
-    content.style.transition = 'filter 0.3s ease';
-    content.appendChild(overlay);
-
     let hidden = false;
-
-    function show() {
-      hidden = false;
-      content.style.filter = '';
-      content.style.cursor = '';
-      content.style.userSelect = '';
-      overlay.style.opacity = '0';
-      btn.innerHTML = EYE_OPEN;
-      btn.setAttribute('aria-label', 'Hide message');
-    }
-
-    function hide() {
-      hidden = true;
-      content.style.filter = 'blur(4px)';
-      content.style.cursor = 'pointer';
-      content.style.userSelect = 'none';
-      overlay.style.opacity = '1';
-      btn.innerHTML = EYE_OFF;
-      btn.setAttribute('aria-label', 'Show message');
-    }
-
-    btn.onclick = () => hidden ? show() : hide();
+    btn.onclick = () => {
+      hidden = !hidden;
+      content.style.filter = hidden ? 'blur(6px)' : '';
+      content.style.cursor = hidden ? 'pointer' : '';
+      content.style.userSelect = hidden ? 'none' : '';
+      btn.innerHTML = hidden ? EYE_OFF : EYE_OPEN;
+      btn.setAttribute('aria-label', hidden ? 'Show message' : 'Hide message');
+    };
 
     content.addEventListener('click', () => {
-      if (hidden) show();
+      if (hidden) btn.click();
     });
 
     actionBar.appendChild(btn);
