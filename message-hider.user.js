@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Message Hider (Claude + ChatGPT)
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.2
 // @description  Скрывает сообщения ассистента через blur на Claude и ChatGPT
 // @author       DundIIR
 // @match        https://claude.ai/*
@@ -32,7 +32,8 @@
   const isGPT = location.hostname === 'chatgpt.com';
 
   function addButton(actionBar, content, btnClass) {
-    if (actionBar.querySelector('.hide-msg-btn')) return;
+    if (actionBar.querySelector('.hide-msg-btn') ||
+        actionBar.closest('[data-test-render-count]')?.querySelector('.hide-msg-btn')) return;
     if (!content) return;
 
     const btn = document.createElement('button');
@@ -72,9 +73,10 @@
 
   function addGPTButtons() {
     document.querySelectorAll('[aria-label="Действия с ответом"], [aria-label="Copy, talk, and more"]').forEach(actionBar => {
-      const wrapper = actionBar.closest('[data-message-author-role="assistant"]')?.parentElement;
-      if (!wrapper) return;
-      const content = wrapper.querySelector('.markdown');
+      if (actionBar.querySelector('.hide-msg-btn')) return;
+      const agentTurn = actionBar.closest('.agent-turn');
+      if (!agentTurn) return;
+      const content = agentTurn.querySelector('.markdown');
       if (!content) return;
       addButton(actionBar, content,
         'text-token-text-secondary hover:bg-token-bg-secondary rounded-lg flex items-center justify-center h-8 w-8'
@@ -87,7 +89,11 @@
     if (isGPT) addGPTButtons();
   }
 
-  const observer = new MutationObserver(() => addEyeButtons());
+  let debounceTimer;
+  const observer = new MutationObserver(() => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => addEyeButtons(), 100);
+  });
   observer.observe(document.body, { childList: true, subtree: true });
   addEyeButtons();
 })();
