@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Message Hider (Claude + ChatGPT)
 // @namespace    http://tampermonkey.net/
-// @version      1.0.5
+// @version      1.0.6
 // @description  Скрывает сообщения ассистента через blur на Claude и ChatGPT
 // @author       DundIIR
 // @match        https://claude.ai/*
@@ -75,7 +75,8 @@
   }
 
   function addDeleteButton(actionBar, container, btnClass) {
-    if (actionBar.querySelector('.delete-msg-btn')) return;
+    if (actionBar.querySelector('.delete-msg-btn') ||
+        actionBar.closest('[data-test-render-count]')?.querySelector('.delete-msg-btn')) return;
     if (!container) return;
 
     const btn = document.createElement('button');
