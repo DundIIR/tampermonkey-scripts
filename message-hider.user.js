@@ -104,7 +104,7 @@
       const innerBar = actionBar.querySelector('.flex.items-stretch') || actionBar;
       const btnClass = 'cds-reset group/btn relative isolate inline-flex shrink-0 items-center justify-center border-0 outline-none rounded h-control aspect-square w-control !text-muted hover:!text-primary';
       addButton(innerBar, content, btnClass);
-      addDeleteButton(innerBar, wrapper, btnClass);
+      addDeleteButton(innerBar, content, btnClass);
     });
   }
 
@@ -115,10 +115,9 @@
       if (!agentTurn) return;
       const content = agentTurn.querySelector('.markdown');
       if (!content) return;
-      const section = agentTurn.closest('section[data-turn="assistant"]') || agentTurn;
       const btnClass = 'text-token-text-secondary hover:bg-token-bg-secondary rounded-lg flex items-center justify-center h-8 w-8';
       addButton(actionBar, content, btnClass);
-      addDeleteButton(actionBar, section, btnClass);
+      addDeleteButton(actionBar, content, btnClass);
     });
   }
 
