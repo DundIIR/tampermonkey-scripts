@@ -60,8 +60,33 @@
         if (treeBtn) removeButton();
     });
 
+    function addFileLinkButtons() {
+        document.querySelectorAll('[data-testid="diff-file-copy-clipboard"]').forEach(copyBtn => {
+            if (copyBtn.parentElement.querySelector('.copy-file-link-btn')) return;
+            const fileAnchor = copyBtn.closest('[class*="file-title"]')?.querySelector('a[data-testid="file-title"]');
+            if (!fileAnchor) return;
+            let clipboardData;
+            try { clipboardData = JSON.parse(copyBtn.getAttribute('data-clipboard-text')); } catch { return; }
+            const fullPath = clipboardData?.text;
+            if (!fullPath) return;
+            const fileName = fullPath.split('/').pop();
+            const href = fileAnchor.getAttribute('href');
+            if (!href) return;
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-default btn-sm gl-button btn-default-tertiary btn-icon copy-file-link-btn';
+            btn.innerHTML = `<svg class="gl-button-icon gl-icon s16"><use href="#copy-to-clipboard"></use></svg><title>Copy file link</title>`;
+            btn.onclick = async (e) => {
+                e.stopPropagation();
+                const url = href.startsWith('http') ? href : `${location.origin}${href}`;
+                await navigator.clipboard.writeText(`[${fileName}](${url})`);
+            };
+            copyBtn.insertAdjacentElement('afterend', btn);
+        });
+    }
+
     const observer = new MutationObserver(() => {
         if (document.querySelector('[data-testid="list-view-toggle"].selected')) addButton();
+        addFileLinkButtons();
     });
     observer.observe(document.body, { childList: true, subtree: true });
 })();
