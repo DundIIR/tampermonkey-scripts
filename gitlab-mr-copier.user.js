@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitLab MR Files Copier
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.1
 // @description  Копирует список изменённых файлов bpm-ui из GitLab MR
 // @author       You
 // @match        https://gitlab.silaunion.ru/*
@@ -9,6 +9,8 @@
 // @updateURL    https://raw.githubusercontent.com/DundIIR/tampermonkey-scripts/main/gitlab-mr-copier.user.js
 // @downloadURL  https://raw.githubusercontent.com/DundIIR/tampermonkey-scripts/main/gitlab-mr-copier.user.js
 // ==/UserScript==
+
+//Тест обновлений
 
 (function() {
     'use strict';
