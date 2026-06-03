@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitLab MR Files Copier
 // @namespace    http://tampermonkey.net/
-// @version      1.0.4
+// @version      1.0.5
 // @description  Копирует список изменённых файлов bpm-ui из GitLab MR
 // @author       You
 // @match        https://gitlab.silaunion.ru/*
@@ -26,6 +26,7 @@
         vm.items.forEach(item => {
             if (item.isHeader || !item.key?.startsWith('bpm-ui/')) return;
             if (/\.(svg|png|jpg|jpeg|gif)$/i.test(item.key)) return;
+            if (item.key.includes('/locales/')) return;
             if (seen.has(item.key)) return;
             seen.add(item.key);
             files.push(`${item.key} +${item.addedLines} -${item.removedLines}`);
