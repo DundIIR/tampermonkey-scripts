@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitLab MR Review Copier
 // @namespace    http://tampermonkey.net/
-// @version      2026-06-10
+// @version      1.1.0
 // @description  Копирует все замечания ревью из GitLab MR в формате для Claude Code
 // @author       DundIIR
 // @match        https://gitlab.silaunion.ru/*
