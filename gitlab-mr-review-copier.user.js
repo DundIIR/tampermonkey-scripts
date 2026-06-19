@@ -101,7 +101,28 @@
         tabs.appendChild(btn);
     }
 
-    const observer = new MutationObserver(addButton);
+    function getCurrentUsername() {
+        const stored = localStorage.getItem('gl-username');
+        if (stored) return stored;
+        const profileLink = document.querySelector('a[data-testid="user-profile-link"]');
+        if (profileLink) {
+            const m = profileLink.href.match(/\/([^/]+)$/);
+            if (m) return m[1];
+        }
+        return null;
+    }
+
+    function patchMrDashboardButton() {
+        const btn = document.querySelector('a[data-testid="merge-requests-shortcut-button"]');
+        if (!btn || btn.dataset.mrPatched) return;
+        const username = getCurrentUsername();
+        if (!username) return;
+        btn.dataset.mrPatched = '1';
+        btn.href = `/next-ng/bpm/-/merge_requests/?sort=created_date&state=opened&author_username=${username}&first_page_size=20`;
+    }
+
+    const observer = new MutationObserver(() => { addButton(); patchMrDashboardButton(); });
     observer.observe(document.body, { childList: true, subtree: true });
     addButton();
+    patchMrDashboardButton();
 })();
