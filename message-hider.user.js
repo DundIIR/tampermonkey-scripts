@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Message Hider (Claude + ChatGPT)
 // @namespace    http://tampermonkey.net/
-// @version      1.0.6
+// @version      1.0.7
 // @description  Скрывает сообщения ассистента через blur на Claude и ChatGPT
 // @author       DundIIR
 // @match        https://claude.ai/*
@@ -98,7 +98,7 @@
   }
 
   function addClaudeButtons() {
-    document.querySelectorAll('[role="group"][aria-label="Message actions"]').forEach(actionBar => {
+    document.querySelectorAll('[role="toolbar"][aria-label="Message actions"]').forEach(actionBar => {
       const wrapper = actionBar.closest('[data-test-render-count]');
       if (!wrapper) return;
       const content = wrapper.querySelector('.font-claude-response');
