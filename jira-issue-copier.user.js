@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Jira Issue Copier
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0
+// @version      1.1.1
 // @description  Копирует номер и название задачи из детальной панели доски Jira
 // @author       DundIIR
 // @match        https://jira.silaunion.ru/*
@@ -90,7 +90,27 @@
         controls.insertBefore(copyBtn, controls.firstChild);
     }
 
-    const observer = new MutationObserver(() => addButton());
+    function addCardButtons() {
+        document.querySelectorAll('.ghx-issue[data-issue-key]').forEach(card => {
+            const keyEl = card.querySelector('.ghx-key');
+            const key = card.dataset.issueKey;
+            if (!keyEl || !key || keyEl.querySelector('.jira-card-link-btn')) return;
+
+            const btn = createCopyButton(
+                'jira-card-link-btn',
+                'Скопировать ссылку на задачу',
+                LINK_ICON,
+                () => `${location.origin}/browse/${key}`
+            );
+            btn.style.marginRight = '0';
+            btn.style.marginLeft = '4px';
+            btn.addEventListener('mousedown', e => e.stopPropagation());
+            keyEl.appendChild(btn);
+        });
+    }
+
+    const observer = new MutationObserver(() => { addButton(); addCardButtons(); });
     observer.observe(document.body, { childList: true, subtree: true });
     addButton();
+    addCardButtons();
 })();
