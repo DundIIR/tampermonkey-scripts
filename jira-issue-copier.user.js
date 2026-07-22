@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Кнопки копирования задач Jira
 // @namespace    http://tampermonkey.net/
-// @version      1.2.2
+// @version      1.2.3
 // @description  Копирует номер и название задачи из детальной панели доски Jira
 // @author       DundIIR
 // @match        https://jira.silaunion.ru/*
@@ -95,6 +95,9 @@
             const keyEl = card.querySelector('.ghx-key');
             const key = card.dataset.issueKey;
             if (!keyEl || !key || keyEl.querySelector('.jira-card-link-btn')) return;
+
+            keyEl.style.display = 'flex';
+            keyEl.style.alignItems = 'center';
 
             const btn = createCopyButton(
                 'jira-card-link-btn',
