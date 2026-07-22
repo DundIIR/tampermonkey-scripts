@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         GitLab MR Review Copier
+// @name         GitLab MR копирование комментариев Review
 // @namespace    http://tampermonkey.net/
 // @version      1.2.0
 // @description  Копирует замечания ревью из GitLab MR (все или отдельный thread) в формате для Claude Code

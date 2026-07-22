@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         GitLab MR Files Copier
+// @name         GitLab MR копирование изменённых файлов
 // @namespace    http://tampermonkey.net/
 // @version      1.0.5
 // @description  Копирует список изменённых файлов bpm-ui из GitLab MR

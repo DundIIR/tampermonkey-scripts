@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Jira Issue Copier
+// @name         Кнопки копирования задач Jira
 // @namespace    http://tampermonkey.net/
 // @version      1.1.1
 // @description  Копирует номер и название задачи из детальной панели доски Jira

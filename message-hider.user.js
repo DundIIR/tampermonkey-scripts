@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Message Hider (Claude + ChatGPT)
+// @name         Скрытие сообщений (Claude + ChatGPT)
 // @namespace    http://tampermonkey.net/
 // @version      1.0.7
 // @description  Скрывает сообщения ассистента через blur на Claude и ChatGPT
