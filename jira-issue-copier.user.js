@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Кнопки копирования задач Jira
 // @namespace    http://tampermonkey.net/
-// @version      1.2.3
+// @version      1.3
 // @description  Копирует номер и название задачи из детальной панели доски Jira
 // @author       DundIIR
 // @match        https://jira.silaunion.ru/*
