@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Кнопки копирования задач Jira
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.3.1
 // @description  Копирует номер и название задачи из детальной панели доски Jira
 // @author       DundIIR
 // @match        https://jira.silaunion.ru/*
@@ -36,10 +36,10 @@
         return `${key} ${summary}`;
     }
 
-    function getIssueUrl(detailEl) {
+    function getIssueLink(detailEl) {
         const key = detailEl.dataset.issuekey;
         if (!key) return null;
-        return `${location.origin}/browse/${key}`;
+        return `[${key}](${location.origin}/browse/${key})`;
     }
 
     function createCopyButton(className, title, icon, getText) {
@@ -71,8 +71,12 @@
     function addButton() {
         const detailEl = document.getElementById('ghx-detail-issue');
         if (!detailEl) return;
-        const controls = detailEl.querySelector('.ghx-controls');
-        if (!controls || controls.querySelector('.jira-issue-copy-btn')) return;
+        const keyGroup = detailEl.querySelector('.ghx-key-group');
+        if (!keyGroup || detailEl.querySelector('.jira-issue-copy-buttons')) return;
+
+        const buttons = document.createElement('span');
+        buttons.className = 'jira-issue-copy-buttons';
+        buttons.style.cssText = 'display:inline-flex;align-items:center;float:left;margin-left:6px;vertical-align:middle;';
 
         const copyBtn = createCopyButton(
             'jira-issue-copy-btn',
@@ -82,12 +86,12 @@
         );
         const linkBtn = createCopyButton(
             'jira-issue-link-btn',
-            'Скопировать ссылку на задачу',
+            'Скопировать ссылку на задачу в формате Markdown',
             LINK_ICON,
-            () => getIssueUrl(detailEl)
+            () => getIssueLink(detailEl)
         );
-        controls.insertBefore(linkBtn, controls.firstChild);
-        controls.insertBefore(copyBtn, controls.firstChild);
+        buttons.append(copyBtn, linkBtn);
+        keyGroup.insertAdjacentElement('afterend', buttons);
     }
 
     function addCardButtons() {
