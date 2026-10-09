@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Скрытие сообщений (Claude + ChatGPT)
 // @namespace    http://tampermonkey.net/
-// @version      1.0.7
+// @version      1.0.8
 // @description  Скрывает сообщения ассистента через blur на Claude и ChatGPT
 // @author       DundIIR
 // @match        https://claude.ai/*
@@ -110,11 +110,12 @@
   }
 
   function addGPTButtons() {
-    document.querySelectorAll('[aria-label="Действия с ответом"], [aria-label="Copy, talk, and more"]').forEach(actionBar => {
-      if (actionBar.querySelector('.hide-msg-btn')) return;
-      const agentTurn = actionBar.closest('.agent-turn');
+    document.querySelectorAll('.turn-action-controls, [aria-label="Действия с ответом"], [aria-label="Copy, talk, and more"]').forEach(actionBar => {
+      const agentTurn = actionBar.closest('.agent-turn, [data-testid^="conversation-turn-"], article');
       if (!agentTurn) return;
-      const content = agentTurn.querySelector('.markdown');
+      const assistantMessage = agentTurn.querySelector('[data-message-author-role="assistant"]');
+      if (!assistantMessage && agentTurn.querySelector('[data-message-author-role="user"]')) return;
+      const content = (assistantMessage || agentTurn).querySelector('.markdown');
       if (!content) return;
       const btnClass = 'text-token-text-secondary hover:bg-token-bg-secondary rounded-lg flex items-center justify-center h-8 w-8';
       addButton(actionBar, content, btnClass);

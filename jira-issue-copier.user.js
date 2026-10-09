@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Кнопки копирования задач Jira
 // @namespace    http://tampermonkey.net/
-// @version      1.3.1
+// @version      1.3.2
 // @description  Копирует номер и название задачи из детальной панели доски Jira
 // @author       DundIIR
 // @match        https://jira.silaunion.ru/*
@@ -76,7 +76,7 @@
 
         const buttons = document.createElement('span');
         buttons.className = 'jira-issue-copy-buttons';
-        buttons.style.cssText = 'display:inline-flex;align-items:center;float:left;margin-left:6px;vertical-align:middle;';
+        buttons.style.cssText = 'display:inline-flex;align-items:center;flex-shrink:0;margin-left:6px;margin-right:auto;';
 
         const copyBtn = createCopyButton(
             'jira-issue-copy-btn',
